@@ -1,0 +1,54 @@
+[
+  {
+    "title": "Open Source Portfolio Template",
+    "company": "Community",
+    "category": "devops",
+    "description": "The template you're looking at right now. Built with Astro, fully data-driven, and designed to be claimed by anyone. Fork it, fill it, ship it. All placeholder content is waiting for yours.",
+    "tags": ["Astro", "TypeScript", "Tailwind CSS", "Open Source", "Template"],
+    "icon": "command-line",
+    "featuredImage": "/images/projects/use-astro.jpg",
+    "backgroundImage": "/images/projects/use-astro.jpg",
+    "link": "",
+    "colorIcon": "/images/icons/materialdesign/github.svg",
+    "githubRepo": "portfolio-template"
+  },
+  {
+    "title": "3D Environment Study",
+    "company": "Personal Work",
+    "category": "infrastructure",
+    "description": "A series of Blender scenes exploring lighting, texture, and atmosphere — no narrative, just craft. Rendered in Cycles, post-processed in Photoshop, shared as a study in patience and iteration.",
+    "tags": ["Blender", "3D Modeling", "Lighting", "Cycles Render", "Photoshop"],
+    "icon": "cpu-chip",
+    "featuredImage": "/images/projects/blender-mockup.jpg",
+    "backgroundImage": "/images/projects/blender-mockup.jpg",
+    "link": "",
+    "colorIcon": "/images/icons/materialdesign/cube-outline.svg",
+    "githubRepo": ""
+  },
+  {
+    "title": "Personal Design System",
+    "company": "Side Project",
+    "category": "security",
+    "description": "A living component library built for personal and freelance use. Design tokens, reusable components, and documentation that travel from project to project — no starting from scratch every time.",
+    "tags": ["Figma", "CSS", "TypeScript", "Design Systems", "Component Library"],
+    "icon": "document-text",
+    "featuredImage": "/images/projects/design-library.jpg",
+    "backgroundImage": "/images/projects/design-library.jpg",
+    "link": "",
+    "colorIcon": "/images/icons/materialdesign/palette-outline.svg",
+    "githubRepo": "design-system"
+  },
+  {
+    "title": "Photography Workflow App",
+    "company": "Side Project",
+    "category": "web",
+    "description": "A lightweight local web app for managing shoot intake, selects, and client delivery — replacing a patchwork of folders, spreadsheets, and emails with a single tool built for the way I work.",
+    "tags": ["React", "SQLite", "Photography", "Workflow", "Node.js"],
+    "icon": "eye",
+    "featuredImage": "/images/projects/web-app.jpg",
+    "backgroundImage": "/images/projects/web-app.jpg",
+    "link": "",
+    "colorIcon": "/images/icons/materialdesign/camera-outline.svg",
+    "githubRepo": "photo-workflow"
+  }
+]
