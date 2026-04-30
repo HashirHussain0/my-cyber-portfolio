@@ -220,9 +220,12 @@ async function _doAugment(projects: ProjectEntry[]): Promise<ProjectEntry[]> {
     }
 
     const image = await fetchReadmeImage(repoName, repoInfo.default_branch);
+    // Prefer the path already declared in projects.json so the cache entry
+    // matches where download-assets.mjs actually saves the file.
+    const declaredPath = project.featuredImage ?? project.backgroundImage ?? null;
     updatedCache[repoName] = {
       image,
-      localPath: image ? localPathFor(repoName, image) : null,
+      localPath: declaredPath ?? (image ? localPathFor(repoName, image) : null),
       repoUpdatedAt,
       fetchedAt: new Date().toISOString(),
     };
@@ -250,7 +253,7 @@ function applyCache(projects: ProjectEntry[], cache: Cache): ProjectEntry[] {
     const imagePath = entry.localPath ?? entry.image;
     return {
       ...project,
-      featuredImage: project.featuredImage ?? imagePath,
+      featuredImage: project.featuredImage ?? project.backgroundImage ?? imagePath,
       backgroundImage: project.backgroundImage ?? imagePath,
     };
   });
