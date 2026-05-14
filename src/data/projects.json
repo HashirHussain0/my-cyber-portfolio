@@ -19,7 +19,7 @@
         "/images/projects/use-astro3.jpg"
       ],
       "link": "",
-      "colorIcon": "/images/icons/materialdesign/github.svg",
+      "colorIcon": "devicon:astro",
       "githubRepo": "portfolio-template"
     },
     {
@@ -40,7 +40,7 @@
         "/images/projects/blender-mockup3.jpg"
       ],
       "link": "",
-      "colorIcon": "/images/icons/materialdesign/cube-outline.svg",
+      "colorIcon": "devicon:blender",
       "githubRepo": ""
     },
     {
@@ -60,7 +60,7 @@
         "/images/projects/design-library3.jpg"
       ],
       "link": "",
-      "colorIcon": "/images/icons/materialdesign/palette-outline.svg",
+      "colorIcon": "devicon:figma",
       "githubRepo": "design-system"
     },
     {
@@ -80,7 +80,7 @@
         "/images/projects/web-app3.jpg"
       ],
       "link": "",
-      "colorIcon": "/images/icons/materialdesign/camera-outline.svg",
+      "colorIcon": "devicon:react",
       "githubRepo": "photo-workflow"
     }
   ]
