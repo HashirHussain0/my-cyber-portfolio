@@ -2,10 +2,10 @@
 import personal from '../data/personal.json';
 import skillsData from '../data/skills.json';
 import certsData from '../data/certifications.json';
-import expertiseData from '../data/expertise.json';
-import projectsData from '../data/projects.json';
-
-const resumeProjects = projectsData.filter(p => p.resume);
+import expertiseFile from '../data/expertise.json';
+import projectsFile from '../data/projects.json';
+const expertiseData = expertiseFile.items;
+const resumeProjects = projectsFile.items.filter(p => (p as any).resume);
 
 const earnedCerts = certsData.filter(c => c.status === 'Earned');
 const inProgressCerts = certsData.filter(c => c.status !== 'Earned');
