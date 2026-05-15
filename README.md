@@ -15,7 +15,7 @@ Portfolio template built with Astro. All your content lives in simple JSON files
 | **SEO & PWA**          | OG tags, web manifest, all favicon sizes, works offline               |
 | **Accessibility**      | Keyboard nav, ARIA labels, skip link, reduced-motion support          |
 | **Stack**              | Astro 6, Tailwind CSS 4, TypeScript, GitHub API + RSS                 |
-| **Requirements**       | Docker + Docker Compose, or Node 18+ with npm                         |
+| **Requirements**       | Docker + Docker Compose, or Node 24+ with pnpm 11                     |
 
 ---
 
@@ -43,9 +43,9 @@ docker compose build && docker compose up
 ### Without Docker:
 
 ```bash
-npm install
-npm run dev       # dev server at http://localhost:4321
-npm run build     # builds to ./dist/
+pnpm install
+pnpm run dev      # dev server at http://localhost:4321
+pnpm run build    # builds to ./dist/
 ```
 
 Set environment variables in a `.env` file in the project root:
@@ -180,13 +180,13 @@ All content lives in `src/data/`. Edit these JSON files to update any part of th
 
 ## Build Checks & Quality Gates
 
-The pipeline runs four automated quality checks on every build. All four are enforced both locally (via npm scripts) and inside the Docker build as **dedicated stages** — if any stage fails, Docker halts and the container is never produced. The checks can't be bypassed; they're structural, not advisory.
+The pipeline runs four automated quality checks on every build. All four are enforced both locally (via pnpm scripts) and inside the Docker build as **dedicated stages** — if any stage fails, Docker halts and the container is never produced. The checks can't be bypassed; they're structural, not advisory.
 
 ---
 
 ### ESLint — Static Analysis
 
-**Commands:** `npm run lint` · `npm run lint:fix`  
+**Commands:** `pnpm run lint` · `pnpm run lint:fix`  
 **Config:** `eslint.config.mjs`
 
 Catches bugs and enforces consistent code patterns before they reach production. Uses ESLint 9's flat config format with `eslint-plugin-astro` for Astro-specific rules and TypeScript parser awareness inside `.astro` files.
@@ -205,7 +205,7 @@ Catches bugs and enforces consistent code patterns before they reach production.
 
 ### Astro Check — TypeScript Type Checking
 
-**Command:** `npm run typecheck`  
+**Command:** `pnpm run typecheck`  
 **Config:** `tsconfig.json`
 
 Catches type errors at compile time before they become runtime bugs. Runs `astro check`, which wraps the TypeScript compiler with full awareness of `.astro` component syntax, prop types, and slot types. Configured with `strict` mode and `strictNullChecks` to eliminate the entire class of `null`/`undefined` runtime errors.
@@ -233,14 +233,14 @@ The Dockerfile runs lint, format check, and type check as separate build stages 
 
 | Stage | What it does |
 | ----- | ------------ |
-| `deps` | Installs dependencies via `npm ci` (frozen lockfile — no version drift) |
-| `lint` | Runs `npm run lint` then `npm run format:check` — both must pass |
-| `typecheck` | Runs `npm run typecheck` |
-| `builder` | Runs `npm run build` — only reached if all above pass |
+| `deps` | Installs dependencies via `pnpm install --frozen-lockfile` (frozen lockfile — no version drift) |
+| `lint` | Runs `pnpm run lint` — must pass |
+| `typecheck` | Runs `pnpm run typecheck` |
+| `builder` | Runs `pnpm run build` — only reached if all above pass |
 | `build-static` *(optional)* | Bakes `dist/` into the image at build time (activate with `--profile serve`) |
 | `server` *(optional)* | Nginx Alpine image serving the baked static output (activate with `--profile serve`) |
 
-**Docs:** [Docker multi-stage builds](https://docs.docker.com/build/building/multi-stage/) · [npm ci](https://docs.npmjs.com/cli/commands/npm-ci)
+**Docs:** [Docker multi-stage builds](https://docs.docker.com/build/building/multi-stage/) · [pnpm install --frozen-lockfile](https://pnpm.io/cli/install#--frozen-lockfile)
 
 ---
 
@@ -261,10 +261,10 @@ docker build --target typecheck  --progress=plain -t your-app-typecheck .
 
 ```bash
 # ESLint — catches code issues and style violations
-docker run --rm your-app-lint npm run lint
+docker run --rm your-app-lint pnpm run lint
 
 # TypeScript — catches type errors across all .astro and .ts files
-docker run --rm your-app-typecheck npm run typecheck
+docker run --rm your-app-typecheck pnpm run typecheck
 ```
 
 Each `docker run` command always executes fresh against the built image, regardless of cache. If a check fails, the output tells you exactly which file and line to fix.
@@ -555,7 +555,7 @@ Example: place `myapp.png` in `public/images/icons/custom/` and reference it as 
 
 ---
 
-Add or remove categories freely — the grid adapts automatically. To add a skill, append a new object with `name` and `icon`. The build downloads any missing Iconify SVGs automatically on the next `npm run dev` or `npm run build`.
+Add or remove categories freely — the grid adapts automatically. To add a skill, append a new object with `name` and `icon`. The build downloads any missing Iconify SVGs automatically on the next `pnpm run dev` or `pnpm run build`.
 
 ---
 
@@ -1031,7 +1031,7 @@ Cloudflare auto-detects Astro. Confirm these values (or enter them if not pre-fi
 | Setting                | Value           |
 | ---------------------- | --------------- |
 | Framework preset       | Astro           |
-| Build command          | `npm run build` |
+| Build command          | `pnpm run build` |
 | Build output directory | `dist`          |
 | Root directory         | _(leave blank)_ |
 
@@ -1101,7 +1101,7 @@ Netlify auto-detects Astro. Confirm these values:
 | Setting           | Value           |
 | ----------------- | --------------- |
 | Branch to deploy  | `main`          |
-| Build command     | `npm run build` |
+| Build command     | `pnpm run build` |
 | Publish directory | `dist`          |
 
 **4. Set environment variables**
@@ -1171,9 +1171,9 @@ Vercel auto-detects Astro. Confirm these values in the configuration screen:
 | Setting          | Value           |
 | ---------------- | --------------- |
 | Framework preset | Astro           |
-| Build command    | `npm run build` |
+| Build command    | `pnpm run build` |
 | Output directory | `dist`          |
-| Install command  | `npm install`   |
+| Install command  | `pnpm install`   |
 | Root directory   | _(leave blank)_ |
 
 **4. Set environment variables**
@@ -1282,30 +1282,142 @@ Builds the social link array rendered throughout the site from `personal.json`.
 
 ---
 
-## npm Audit — Known Vulnerabilities (v1.3.3)
+## Supply Chain Security
 
-All vulnerabilities listed here are **build-time only**. This project produces a fully static site — no Node.js, no npm packages, and none of these dependency trees ship to end users. What gets deployed is plain HTML, CSS, and JavaScript written by Astro; the packages below exist solely in the build container and are discarded when it exits.
+Between 2025 and 2026, several major npm supply chain attacks compromised packages with hundreds of millions of weekly downloads — including `chalk`, `debug`, `axios`, and a self-spreading worm called Shai-Hulud that swept through over 700 packages. The attack pattern is always the same: an attacker publishes a new version of a real package with a malicious install script baked in. npm runs that script automatically and silently the moment anyone does `npm install`. No warning. No prompt.
 
-### 1 HIGH — `fast-uri` ≤ 3.1.1
+This project uses **pnpm 11** with five controls enabled that npm does not have.
 
-Two advisories in one package:
+---
 
-- Path traversal via percent-encoded dot segments — [GHSA-q3j6-qgpj-74h6](https://github.com/advisories/GHSA-q3j6-qgpj-74h6)
-- Host confusion via percent-encoded authority delimiters — [GHSA-v39h-62p7-jpjc](https://github.com/advisories/GHSA-v39h-62p7-jpjc)
+### What This Project Protects Against
 
-### 5 MODERATE — `yaml` 2.0.0–2.8.2
+| Threat | How it works | What stops it here |
+| --- | --- | --- |
+| **Shai-Hulud / credential-theft attacks** | Attacker hijacks a maintainer's npm account and publishes a new version with a `postinstall` script that steals tokens and SSH keys | `strictDepBuilds` — all install scripts are blocked unless explicitly approved; no new script runs without human sign-off |
+| **Mini Shai-Hulud / git-dependency injection** | A published-to-registry package hides a malicious GitHub repo in `optionalDependencies`; npm fetches and executes it transparently | `blockExoticSubdeps` — transitive dependencies may not resolve from `git://`, tarball URLs, or GitHub shorthand; only the registry is allowed |
+| **Same-day poisoned releases** | Attacker publishes a malicious version and it gets pulled in by `npm install` within minutes of publication — long before any scanner detects it | `minimumReleaseAge: 10080` — pnpm refuses to resolve any version published less than 7 days ago; every known major attack was detected within hours, well inside this window |
+| **Axios / credential-downgrade attacks** | Attacker takes over a maintainer account, re-publishes with a different OIDC identity (e.g. a different CI issuer or email), then waits for the package to propagate | `trustPolicy: no-downgrade` — pnpm fails the install if a package's provenance publisher has changed since the last resolved version |
+| **PackageGate / lockfile tampering** | Some package managers record git/tarball dependencies without integrity hashes, allowing a server to silently serve different code on each install | `pnpm-lock.yaml` — every package has an integrity hash; `--frozen-lockfile` in Docker aborts if the lockfile would need to change |
 
-Stack overflow via deeply nested YAML collections — [GHSA-48c2-rrv3-qjmp](https://github.com/advisories/GHSA-48c2-rrv3-qjmp). One root cause, five affected packages in the chain:
+---
+
+### What Is Always On
+
+These run automatically on every `pnpm install` — including every Docker build. You do not need to do anything to activate them.
+
+**`strictDepBuilds`** — No dependency may run `preinstall`, `install`, `postinstall`, or `prepare` unless it is listed in `allowBuilds` inside `pnpm-workspace.yaml`. New packages that need a build script cause the install to fail with a clear error listing the package name.
+
+**`blockExoticSubdeps`** — Any transitive dependency that tries to resolve from a `git://` URL, a direct tarball, or a GitHub shorthand (`user/repo`) is rejected at resolution time. Your direct dependencies (in `package.json`) may still use these sources.
+
+**`minimumReleaseAge: 10080`** — pnpm skips any package version published less than 7 days ago. If the version you want was just published, pnpm prints which version was blocked and when it becomes available.
+
+**`trustPolicy: no-downgrade`** — If a package previously published with OIDC provenance attestation now lacks it (which happens when an attacker takes over an account and re-publishes with a different identity), pnpm fails the install.
+
+**`verifyDepsBeforeRun`** — Before every `pnpm run` or `pnpm exec`, pnpm confirms that `node_modules` matches the lockfile. Scripts can't run against a tampered or stale dependency tree.
+
+---
+
+### Weekly Maintenance — Running the Update Script
+
+Run `update-pinned-packages.sh` once a week to pull in the latest versions of all direct dependencies. Pick the flag that matches what you want to do with `node_modules` afterward:
+
+```bash
+# Update the lockfile only — no node_modules written to disk (fastest, recommended for review)
+./update-pinned-packages.sh --lock-only
+
+# Update, install, and remove node_modules when done
+./update-pinned-packages.sh --discard
+
+# Update and keep node_modules on the host
+./update-pinned-packages.sh --install
+```
+
+The script runs these checks in order and stops if any fails:
+
+1. **pnpm update** — resolves the latest versions; `minimumReleaseAge` and `blockExoticSubdeps` apply automatically during resolution
+2. **Age report** — prints the publish date of every resolved package and warns (in yellow) if any is under 7 days old
+3. **pnpm audit** — fails the run if any high or critical CVE is present in the resolved tree
+4. **README timestamp** — writes a `<!-- packages-last-updated: YYYY-MM-DD -->` marker to `README.md` so you always know when the tree was last reviewed
+
+If the run finishes green, commit `pnpm-lock.yaml` and `package.json`.
+
+---
+
+### When a New Package Blocks the Install
+
+If you add a dependency that runs a build script (most commonly native addons like `sharp`, or binary packages like `esbuild`), `pnpm install` will fail with:
 
 ```
-yaml  (vulnerable)
-  └── yaml-language-server
-        └── volar-service-yaml
-              └── @astrojs/language-server
-                    └── @astrojs/check ≥ 0.9.3
+[ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: some-package@1.2.3
+Run "pnpm approve-builds" to pick which dependencies should be allowed to run scripts.
 ```
 
-> Since this chain is never invoked at runtime and untrusted YAML is never fed into the language server during the build, the exploitability is zero in this context. (sorry i18n ppl)
+**What to do:**
+
+1. Look up what the package's build script actually does — check its `package.json` on npm or its GitHub page. The script should download a platform binary or compile a native addon. If it does anything else, do not approve it.
+2. Run `pnpm approve-builds` to open the interactive review UI.
+3. Add the package to `allowBuilds` in `pnpm-workspace.yaml` with a short comment explaining what it does and today's date.
+
+```yaml
+allowBuilds:
+  your-new-package: true  # downloads platform binary for X. Reviewed YYYY-MM-DD.
+```
+
+Never set `dangerouslyAllowAllBuilds: true` — that disables all script blocking and reverts to npm's behavior.
+
+---
+
+### When a Security Patch Is Blocked by the Age Hold
+
+If `pnpm audit` finds a CVE and the patched version was published less than 7 days ago, pnpm will block it with:
+
+```
+[ERR_PNPM_NO_MATURE_MATCHING_VERSION] Version x.y.z (released N hours ago) of package-name
+does not meet the minimumReleaseAge constraint
+```
+
+This is intentional — new releases are held to avoid same-day attacks. For a confirmed security fix you need immediately, add the specific version to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml`:
+
+```yaml
+minimumReleaseAgeExclude:
+  - "package-name@x.y.z"  # patches GHSA-xxxx-xxxx-xxxx. Published YYYY-MM-DD. Remove after 7 days.
+```
+
+Remove the entry the next day once the version ages past the hold window and re-run the update script.
+
+---
+
+### When a Transitive CVE Has No Upstream Fix Yet
+
+If `pnpm audit` reports a vulnerability in a transitive dependency (a package you didn't install directly) and the package that pulls it in hasn't released a fix yet, you can force a patched version using an override in `pnpm-workspace.yaml`:
+
+```yaml
+overrides:
+  vulnerable-package: ">=fixed.version"
+```
+
+This pins all instances of that package in the tree to a version that meets the constraint, regardless of what the upstream package requests. Run `pnpm install --lockfile-only` after adding the override to regenerate the lockfile.
+
+If the fix genuinely doesn't exist yet and the vulnerability is not exploitable in this project's context, you can add the advisory ID to `auditConfig.ignoreGhsas` — but write a comment explaining why:
+
+```yaml
+auditConfig:
+  ignoreGhsas:
+    - GHSA-xxxx-xxxx-xxxx  # DoS in package-name; only triggered by attacker-controlled input
+                            # which can't reach this static build. Re-check monthly.
+```
+
+---
+
+### Files Involved
+
+| File | What it does |
+| --- | --- |
+| `pnpm-workspace.yaml` | All five security controls live here — edit this file to approve builds, add overrides, exempt versions from the age hold, or ignore advisories |
+| `pnpm-lock.yaml` | The frozen dependency tree with integrity hashes for every package — commit every change to this file |
+| `update-pinned-packages.sh` | Weekly update script — runs the update, age report, and audit in sequence |
+| `Dockerfile` | Runs `pnpm install --frozen-lockfile` at build time — fails if the lockfile is out of sync |
 
 ---
 
