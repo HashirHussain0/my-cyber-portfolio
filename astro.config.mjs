@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from '@tailwindcss/postcss';
 
 // base: './' is broken in Astro 6: prependForwardSlash() in vite-plugin-assets.ts
 // always prepends '/', turning './' into '/.' and making BASE_URL = '/.'.
@@ -15,7 +15,11 @@ export default defineConfig({
   trailingSlash: 'never',
   build: { format: 'file' },
   vite: {
-    plugins: [tailwindcss()],
+    css: {
+      postcss: {
+        plugins: [tailwindcss()],
+      },
+    },
   },
   output: 'static',
   compressHTML: true,
