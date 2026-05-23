@@ -1339,7 +1339,7 @@ The script runs these checks in order and stops if any fails:
 1. **pnpm update** — resolves the latest versions; `minimumReleaseAge` and `blockExoticSubdeps` apply automatically during resolution
 2. **Age report** — prints the publish date of every resolved package and warns (in yellow) if any is under 7 days old
 3. **pnpm audit** — fails the run if any high or critical CVE is present in the resolved tree
-4. **README timestamp** — writes a `<!-- packages-last-updated: YYYY-MM-DD -->` marker to `README.md` so you always know when the tree was last reviewed
+4. **README timestamp** — writes a ` packages last updated: YYYY MM DD ` marker to `README.md` so you always know when the tree was last reviewed
 
 If the run finishes green, commit `pnpm-lock.yaml` and `package.json`.
 
@@ -1473,3 +1473,7 @@ Controls that require a backend, authentication system, or session management ar
 
 ![Astro Portfolio Theme Official Footer Section](https://raw.githubusercontent.com/MarcusHoltz/marcusholtz.github.io/refs/heads/main/assets/img/posts/astro-portfolio-theme-9-footer.png "Footer, incase you forgot this wasnt instagram")
 
+
+---
+
+<!-- packages-last-updated: YYYY-MM-DD -->
