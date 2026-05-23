@@ -41,19 +41,10 @@ jobs:
 
       - uses: pnpm/action-setup@v4
 
-      - name: Migrate @tailwindcss/vite → @tailwindcss/postcss
-        # Idempotent — no-op once the project has been migrated.
-        # @tailwindcss/vite breaks Astro 6's rolldown-vite bundler (0 pages generated).
-        run: |
-          if grep -q '"@tailwindcss/vite"' package.json; then
-            pnpm remove @tailwindcss/vite
-            pnpm add @tailwindcss/postcss@latest
-          fi
-
       - name: Update pinned packages to latest
         run: |
           pnpm update \
-            astro tailwindcss @tailwindcss/postcss @astrojs/check \
+            astro tailwindcss @tailwindcss/vite @astrojs/check \
             typescript eslint @typescript-eslint/parser eslint-plugin-astro \
             @types/node rss-parser prettier prettier-plugin-astro \
             prettier-plugin-tailwindcss \
