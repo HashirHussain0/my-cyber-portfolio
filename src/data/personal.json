@@ -13,6 +13,19 @@
   "linkedin": "hashirhussain0",
   "tryhackme": "your-github-handle",
   "gitlab": "",
+    "socials": [
+    {
+      "name": "LinkedIn",
+      "url": "https://linkedin.com",
+      "icon": "lucide:linkedin"
+    },
+    {
+      "name": "TryHackMe",
+      "url": "https://tryhackme.com",
+      "icon": "lucide:terminal"
+    }
+  ]
+
   "facebook": "",
   "youtube": "",
   "discogs": "",
