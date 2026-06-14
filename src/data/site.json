@@ -52,12 +52,13 @@
       "personalKey": "blog",
       "urlTemplate": "{value}"
     },
-    {
-      "label": "GitHub",
-      "desc": "Open-source work and side experiments",
-      "personalKey": "github",
-      "urlTemplate": "https://github.com/{value}"
+        {
+      "label": "TryHackMe",
+      "desc": "Cybersecurity training profile",
+      "personalKey": "tryhackme",
+      "urlTemplate": "https://tryhackme.com{value}"
     },
+
     {
       "label": "LinkedIn",
       "desc": "Professional profile and recommendations",
